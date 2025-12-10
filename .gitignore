@@ -1,0 +1,38 @@
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+.classpath
+.project
+.settings/
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+
+# System
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Documentation & Rapports (Exclus du code source)
+RAPPORT_TECHNIQUE_BACKEND.md
+RAPPORT_FINAL_TABLEAUX.md
+DOCUMENTATION_COMPLETE.md
+DOCUMENTATION_ARCHITECTURE.md
+ARCHITECTURE_DIAGRAM.html
+architecture_diagram.png
+Gestion_Event_Postman_Tests.json
+
