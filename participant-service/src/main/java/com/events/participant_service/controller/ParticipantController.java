@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/participants")
+@CrossOrigin("*")
 public class ParticipantController {
 
     private final ParticipantService service;
@@ -20,6 +21,16 @@ public class ParticipantController {
     @GetMapping
     public List<Participant> getAll() {
         return service.getAllParticipants();
+    }
+
+    @GetMapping("/event/{eventId}")
+    public List<Participant> getByEvent(@PathVariable Long eventId) {
+        return service.getParticipantsByEvent(eventId);
+    }
+
+    @GetMapping("/count/event/{eventId}")
+    public long countByEvent(@PathVariable Long eventId) {
+        return service.countParticipantsByEvent(eventId);
     }
 
     @PostMapping
@@ -41,5 +52,15 @@ public class ParticipantController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         service.deleteParticipant(id);
+    }
+
+    @PostMapping("/login")
+    public Participant login(@RequestBody Participant loginRequest) {
+        // Simple authentication logic for demo
+        Participant participant = service.getParticipantByEmail(loginRequest.getEmail());
+        if (participant != null && participant.getPassword() != null && participant.getPassword().equals(loginRequest.getPassword())) {
+            return participant;
+        }
+        return null; // Or throw exception
     }
 }

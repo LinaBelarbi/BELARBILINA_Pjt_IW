@@ -7,7 +7,7 @@ import { Participant } from '../models/participant.model';
     providedIn: 'root'
 })
 export class ParticipantService {
-    private apiUrl = 'http://localhost:8080/participants';
+    private apiUrl = 'http://localhost:8082/participants';
 
     constructor(private http: HttpClient) { }
 
@@ -31,8 +31,19 @@ export class ParticipantService {
         return this.http.put<Participant>(`${this.apiUrl}/${id}`, participant);
     }
 
+
     // Désinscrire un participant
     delete(id: number): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    }
+
+    // Récupérer le nombre de participants pour un événement
+    getParticipantCount(eventId: number): Observable<number> {
+        return this.http.get<number>(`${this.apiUrl}/count/event/${eventId}`);
+    }
+
+    // Authentifier un participant
+    login(participant: Participant): Observable<Participant> {
+        return this.http.post<Participant>(`${this.apiUrl}/login`, participant);
     }
 }

@@ -14,4 +14,6 @@ public class NotificationRequest {
     private String message;
     private String recipientEmail;
     private boolean sent;
+    private Long participantId;
+    private Long eventId;
 }

@@ -27,6 +27,18 @@ public class ParticipantService {
         return repository.findById(id).orElse(null);
     }
 
+    public Participant getParticipantByEmail(String email) {
+        return repository.findByEmail(email);
+    }
+
+    public List<Participant> getParticipantsByEvent(Long eventId) {
+        return repository.findByEventId(eventId);
+    }
+
+    public long countParticipantsByEvent(Long eventId) {
+        return repository.countByEventId(eventId);
+    }
+
     /**
      * Sauvegarde un participant et envoie une notification automatique
      */

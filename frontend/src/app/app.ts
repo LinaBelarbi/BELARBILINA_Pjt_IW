@@ -16,6 +16,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     .main-content {
       min-height: calc(100vh - 70px);
       background: #f5f7fa;
+      position: relative;
     }
   `]
 })

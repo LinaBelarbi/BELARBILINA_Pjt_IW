@@ -17,4 +17,8 @@ public class Event {
     private String description;
     private String lieu;
     private String date; // pour simplifier (format texte)
+
+    // Nouveaux champs pour les médias
+    private String imageUrl;
+    private String documentUrl;
 }

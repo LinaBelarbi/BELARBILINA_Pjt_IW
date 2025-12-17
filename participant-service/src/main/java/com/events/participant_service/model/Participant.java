@@ -24,6 +24,7 @@ public class Participant {
     private String nom;
     private String email;
     private String statut;
+    private String password;
     
     // Référence vers l'événement (stocke l'ID de l'événement)
     private Long eventId;

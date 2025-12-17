@@ -38,6 +38,28 @@ import { Event } from '../../../models/event.model';
             ></textarea>
           </div>
 
+          <div class="form-group">
+            <label for="imageUrl">URL de l'image (Affiche)</label>
+            <input 
+              type="text" 
+              id="imageUrl" 
+              name="imageUrl" 
+              [(ngModel)]="event.imageUrl" 
+              placeholder="https://exemple.com/image.jpg"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="documentUrl">URL du document (Programme/Plan)</label>
+            <input 
+              type="text" 
+              id="documentUrl" 
+              name="documentUrl" 
+              [(ngModel)]="event.documentUrl" 
+              placeholder="https://exemple.com/programme.pdf"
+            >
+          </div>
+
           <div class="form-row">
             <div class="form-group">
               <label for="lieu">Lieu</label>
@@ -174,7 +196,9 @@ export class EventFormComponent implements OnInit {
     titre: '',
     description: '',
     lieu: '',
-    date: ''
+    date: '',
+    imageUrl: '',
+    documentUrl: ''
   };
   isEditMode = false;
 

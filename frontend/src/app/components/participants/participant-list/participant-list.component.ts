@@ -1,23 +1,36 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { ParticipantService } from '../../../services/participant.service';
 import { Participant } from '../../../models/participant.model';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'app-participant-list',
-    standalone: true,
-    imports: [CommonModule, RouterLink],
-    template: `
+  selector: 'app-participant-list',
+  standalone: true,
+  imports: [CommonModule, RouterLink, FormsModule],
+  template: `
     <div class="page-container">
       <div class="page-header">
         <h1>👥 Participants</h1>
-        <a routerLink="/participants/new" class="btn-primary">
-          <span>➕</span> Inscrire un participant
-        </a>
+        <div class="actions-header">
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input 
+                    type="text" 
+                    [(ngModel)]="searchTerm"
+                    (ngModelChange)="onSearch()"
+                    placeholder="Rechercher (Nom, Email, Statut)..."
+                    class="search-input"
+                >
+            </div>
+            <a routerLink="/participants/new" class="btn-primary">
+            <span>➕</span> Inscrire un participant
+            </a>
+        </div>
       </div>
 
-      <div class="table-container" *ngIf="participants.length > 0; else noParticipants">
+      <div class="table-container" *ngIf="filteredParticipants.length > 0; else noParticipants">
         <table class="data-table">
           <thead>
             <tr>
@@ -29,11 +42,11 @@ import { Participant } from '../../../models/participant.model';
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let participant of participants">
+            <tr *ngFor="let participant of filteredParticipants">
               <td>{{ participant.id }}</td>
               <td>
                 <div class="participant-info">
-                  <span class="avatar">{{ participant.nom?.charAt(0) || '?' }}</span>
+                  <span class="avatar">{{ participant.nom.charAt(0) || '?' }}</span>
                   {{ participant.nom }}
                 </div>
               </td>
@@ -64,7 +77,7 @@ import { Participant } from '../../../models/participant.model';
       </ng-template>
     </div>
   `,
-    styles: [`
+  styles: [`
     .page-container {
       padding: 2rem;
       max-width: 1200px;
@@ -230,30 +243,87 @@ import { Participant } from '../../../models/participant.model';
       color: #666;
       margin-bottom: 1.5rem;
     }
+
+    .actions-header {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .search-bar {
+      position: relative;
+      width: 300px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      pointer-events: none;
+    }
   `]
 })
 export class ParticipantListComponent implements OnInit {
-    participants: Participant[] = [];
+  participants: Participant[] = [];
+  filteredParticipants: Participant[] = [];
+  searchTerm: string = '';
 
-    constructor(private participantService: ParticipantService) { }
+  constructor(private participantService: ParticipantService) { }
 
-    ngOnInit(): void {
-        this.loadParticipants();
+  ngOnInit(): void {
+    this.loadParticipants();
+  }
+
+  loadParticipants(): void {
+    this.participantService.getAll().subscribe({
+      next: (data) => {
+        this.participants = data;
+        this.filterParticipants();
+      },
+      error: (err) => console.error('Erreur lors du chargement', err)
+    });
+  }
+
+  deleteParticipant(id: number): void {
+    if (confirm('Voulez-vous vraiment désinscrire ce participant ?')) {
+      this.participantService.delete(id).subscribe({
+        next: () => this.loadParticipants(),
+        error: (err) => console.error('Erreur lors de la suppression', err)
+      });
     }
+  }
 
-    loadParticipants(): void {
-        this.participantService.getAll().subscribe({
-            next: (data) => this.participants = data,
-            error: (err) => console.error('Erreur lors du chargement', err)
-        });
-    }
+  onSearch(): void {
+    this.filterParticipants();
+  }
 
-    deleteParticipant(id: number): void {
-        if (confirm('Voulez-vous vraiment désinscrire ce participant ?')) {
-            this.participantService.delete(id).subscribe({
-                next: () => this.loadParticipants(),
-                error: (err) => console.error('Erreur lors de la suppression', err)
-            });
-        }
+  private filterParticipants(): void {
+    if (!this.searchTerm) {
+      this.filteredParticipants = this.participants;
+      return;
     }
+    const term = this.searchTerm.toLowerCase();
+    this.filteredParticipants = this.participants.filter(p =>
+      p.nom.toLowerCase().includes(term) ||
+      p.email.toLowerCase().includes(term) ||
+      p.statut.toLowerCase().includes(term)
+    );
+  }
 }

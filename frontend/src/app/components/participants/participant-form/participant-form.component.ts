@@ -6,10 +6,10 @@ import { ParticipantService } from '../../../services/participant.service';
 import { Participant } from '../../../models/participant.model';
 
 @Component({
-    selector: 'app-participant-form',
-    standalone: true,
-    imports: [CommonModule, FormsModule, RouterLink],
-    template: `
+  selector: 'app-participant-form',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterLink],
+  template: `
     <div class="page-container">
       <div class="form-card">
         <h1>{{ isEditMode ? '✏️ Modifier' : '📝 Inscrire' }} un participant</h1>
@@ -40,6 +40,18 @@ import { Participant } from '../../../models/participant.model';
           </div>
 
           <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              [(ngModel)]="participant.password" 
+              [required]="!isEditMode"
+              placeholder="********"
+            >
+          </div>
+
+          <div class="form-group">
             <label for="statut">Statut</label>
             <select id="statut" name="statut" [(ngModel)]="participant.statut">
               <option value="inscrit">Inscrit</option>
@@ -63,7 +75,7 @@ import { Participant } from '../../../models/participant.model';
       </div>
     </div>
   `,
-    styles: [`
+  styles: [`
     .page-container {
       padding: 2rem;
       max-width: 600px;
@@ -177,41 +189,41 @@ import { Participant } from '../../../models/participant.model';
   `]
 })
 export class ParticipantFormComponent implements OnInit {
-    participant: Participant = {
-        nom: '',
-        email: '',
-        statut: 'inscrit'
-    };
-    isEditMode = false;
+  participant: Participant = {
+    nom: '',
+    email: '',
+    statut: 'inscrit'
+  };
+  isEditMode = false;
 
-    constructor(
-        private participantService: ParticipantService,
-        private router: Router,
-        private route: ActivatedRoute
-    ) { }
+  constructor(
+    private participantService: ParticipantService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
-    ngOnInit(): void {
-        const id = this.route.snapshot.paramMap.get('id');
-        if (id) {
-            this.isEditMode = true;
-            this.participantService.getById(+id).subscribe({
-                next: (data) => this.participant = data,
-                error: (err) => console.error('Erreur lors du chargement', err)
-            });
-        }
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.isEditMode = true;
+      this.participantService.getById(+id).subscribe({
+        next: (data) => this.participant = data,
+        error: (err) => console.error('Erreur lors du chargement', err)
+      });
     }
+  }
 
-    onSubmit(): void {
-        if (this.isEditMode && this.participant.id) {
-            this.participantService.update(this.participant.id, this.participant).subscribe({
-                next: () => this.router.navigate(['/participants']),
-                error: (err) => console.error('Erreur lors de la mise à jour', err)
-            });
-        } else {
-            this.participantService.create(this.participant).subscribe({
-                next: () => this.router.navigate(['/participants']),
-                error: (err) => console.error('Erreur lors de l\'inscription', err)
-            });
-        }
+  onSubmit(): void {
+    if (this.isEditMode && this.participant.id) {
+      this.participantService.update(this.participant.id, this.participant).subscribe({
+        next: () => this.router.navigate(['/participants']),
+        error: (err) => console.error('Erreur lors de la mise à jour', err)
+      });
+    } else {
+      this.participantService.create(this.participant).subscribe({
+        next: () => this.router.navigate(['/participants']),
+        error: (err) => console.error('Erreur lors de l\'inscription', err)
+      });
     }
+  }
 }

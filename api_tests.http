@@ -1,0 +1,41 @@
+### ----------------------
+### SERVICE EVENTS (8081)
+### ----------------------
+
+### 1. Récupérer tous les événements
+GET http://localhost:8081/events
+
+### 2. Créer un événement
+POST http://localhost:8081/events
+Content-Type: application/json
+
+{
+  "titre": "Atelier VS Code",
+  "description": "Test d'API directement dans VS Code",
+  "lieu": "Salle Informatique",
+  "date": "25/12/2025"
+}
+
+### ---------------------------
+### SERVICE PARTICIPANTS (8082)
+### ---------------------------
+
+### 3. Récupérer tous les participants
+GET http://localhost:8082/participants
+
+### 4. Inscrire un participant (Déclenche une notification)
+POST http://localhost:8082/participants
+Content-Type: application/json
+
+{
+    "nom": "Test User",
+    "email": "test@vscode.com",
+    "eventId": 1
+}
+
+### -----------------------------
+### SERVICE NOTIFICATIONS (8083)
+### -----------------------------
+
+### 5. Vérifier les notifications reçues
+GET http://localhost:8083/notifications
